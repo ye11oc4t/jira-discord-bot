@@ -34,7 +34,9 @@ def _issue_url(payload: dict) -> str:
     key = issue.get("key", "")
     return f"{base}/browse/{key}" if base and key else ""
 
-
+def _get_avatar(user_obj: dict) -> str:
+    return (user_obj or {}).get("avatarUrls", {}).get("48x48", JIRA_ICON)
+    
 # ── 이슈 ──────────────────────────────────────────────────────────────────────
 
 def _issue_fields(issue: dict) -> dict:
