@@ -133,7 +133,8 @@ def fmt_issue_status_changed(payload: dict) -> dict:
     issue = payload.get("issue", {})
     f = _issue_fields(issue)
     url = _issue_url(payload)
-    user = (payload.get("user") or {}).get("displayName", "?")
+    user_obj = payload.get("user") or {}
+    user = user_obj.get("displayName", "?")
 
     from_status, to_status = "?", f["status"]
     for item in payload.get("changelog", {}).get("items", []):
@@ -159,7 +160,7 @@ def fmt_issue_status_changed(payload: dict) -> dict:
             {"name": "우선순위","value": f["priority"],  "inline": True},
             {"name": "프로젝트","value": f["project"],   "inline": True},
         ],
-        "footer": {"text": f"변경: {user}", "icon_url": JIRA_ICON},
+        "footer": {"text": f"삭제: {user}", "icon_url": _get_avatar(user_obj)},
     }
 
 
