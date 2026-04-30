@@ -24,6 +24,7 @@ Jira의 모든 이벤트를 Discord 채널에 예쁜 Embed로 전송하는 Webho
 Discord 채널 → 설정 → 연동 → **웹후크 만들기** → URL 복사
 
 ### 2. Railway 배포 (추천)
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app)
 
 ```bash
 npm install -g @railway/cli
