@@ -84,7 +84,8 @@ def fmt_issue_updated(payload: dict) -> dict:
     issue = payload.get("issue", {})
     f = _issue_fields(issue)
     url = _issue_url(payload)
-    user = (payload.get("user") or {}).get("displayName", "?")
+    user_obj = payload.get("user") or {}
+    user = user_obj.get("displayName", "?")
     changelog = payload.get("changelog", {})
 
     changed_lines = []
@@ -105,7 +106,7 @@ def fmt_issue_updated(payload: dict) -> dict:
             {"name": "담당자",  "value": f["assignee"], "inline": True},
             {"name": "프로젝트","value": f["project"],  "inline": True},
         ],
-        "footer": {"text": f"수정: {user}", "icon_url": JIRA_ICON},
+        "footer": {"text": f"수정: {user}", "icon_url": _get_avatar(user_obj)},
     }
 
 
