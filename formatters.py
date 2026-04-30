@@ -172,7 +172,8 @@ def fmt_comment(payload: dict, action: str) -> dict:
     url = _issue_url(payload)
     comment = payload.get("comment", {})
     body = (comment.get("body") or "")[:300] or "(내용 없음)"
-    author = (comment.get("author") or {}).get("displayName", "?")
+    author_obj = comment.get("author") or {}
+    author = author_obj.get("displayName", "?")
 
     icons = {"created": "💬", "updated": "📝", "deleted": "🗑️"}
     colors = {"created": "created", "updated": "updated", "deleted": "deleted"}
@@ -185,7 +186,7 @@ def fmt_comment(payload: dict, action: str) -> dict:
             {"name": "작성자",  "value": author,       "inline": True},
             {"name": "프로젝트","value": f["project"], "inline": True},
         ],
-        "footer": {"text": "Jira Comment", "icon_url": JIRA_ICON},
+        "footer": {"text": f"댓글: {author}", "icon_url": _get_avatar(author_obj)},
     }
 
 
