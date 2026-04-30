@@ -59,7 +59,8 @@ def fmt_issue_created(payload: dict) -> dict:
     issue = payload.get("issue", {})
     f = _issue_fields(issue)
     url = _issue_url(payload)
-    user = (payload.get("user") or {}).get("displayName", "?")
+    user_obj = payload.get("user") or {}
+    user = user_obj.get("displayName", "?")
 
     return {
         "title": f"🆕 이슈 생성 · {f['key']}",
@@ -75,7 +76,7 @@ def fmt_issue_created(payload: dict) -> dict:
             {"name": "설명",       "value": f["description"],"inline": False},
             {"name": "레이블",     "value": f["labels"],     "inline": False},
         ],
-        "footer": {"text": f"생성: {user}", "icon_url": JIRA_ICON},
+        "footer": {"text": f"생성: {user}", "icon_url":_get_avatar(user_obj)},
     }
 
 
