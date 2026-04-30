@@ -113,7 +113,8 @@ def fmt_issue_updated(payload: dict) -> dict:
 def fmt_issue_deleted(payload: dict) -> dict:
     issue = payload.get("issue", {})
     f = _issue_fields(issue)
-    user = (payload.get("user") or {}).get("displayName", "?")
+   user_obj = payload.get("user") or {}
+   user = user_obj.get("displayName", "?")
 
     return {
         "title": f"🗑️ 이슈 삭제 · {f['key']}",
@@ -123,7 +124,7 @@ def fmt_issue_deleted(payload: dict) -> dict:
             {"name": "프로젝트", "value": f["project"], "inline": True},
             {"name": "유형",     "value": f["issuetype"], "inline": True},
         ],
-        "footer": {"text": f"삭제: {user}", "icon_url": JIRA_ICON},
+        "footer": {"text": f"삭제: {user}", "icon_url": _get_avatar(user_obj)},
     }
 
 
