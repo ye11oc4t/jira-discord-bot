@@ -329,7 +329,10 @@ def format_event(event_type: str, payload: dict):
         return fmt_issue_deleted(payload)
 
     if event_type == "jira:issue_updated":
-        return None  # 이슈 수정 알림 비활성화
+        items = payload.get("changelog", {}).get("items", [])
+        if any(i.get("field") == "status" for i in items):
+            return fmt_issue_status_changed(payload)
+        return None
 
     if event_type in ("comment_created", "comment_updated", "comment_deleted"):
         action = event_type.split("_")[1]
