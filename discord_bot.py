@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
-JIRA_BASE_URL = os.getenv("JIRA_BASE_URL")  # e.g. https://woowahanbeavers.atlassian.net
+JIRA_BASE_URL = os.getenv("JIRA_BASE_URL")
 JIRA_EMAIL = os.getenv("JIRA_EMAIL")
 JIRA_API_TOKEN = os.getenv("JIRA_API_TOKEN")
 JIRA_PROJECT_KEY = os.getenv("JIRA_PROJECT_KEY", "MADI")
@@ -29,9 +29,14 @@ async def fetch_today_issues():
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     jql = f'project = {JIRA_PROJECT_KEY} AND updated >= "{today}" ORDER BY updated DESC'
 
+    url = f"{JIRA_BASE_URL}/rest/api/3/issue/search"
+    print(f"Requesting: {url}")
+    print(f"Auth email: {JIRA_EMAIL}")
+    print(f"JQL: {jql}")
+
     async with httpx.AsyncClient() as http:
         resp = await http.post(
-            f"{JIRA_BASE_URL}/rest/api/3/issue/search",
+            url,
             headers=get_jira_auth(),
             json={
                 "jql": jql,
@@ -40,10 +45,12 @@ async def fetch_today_issues():
             },
             timeout=10,
         )
+        print(f"Response status: {resp.status_code}")
         if resp.status_code != 200:
+            print(f"Response body: {resp.text}")
             return None, f"Jira API 오류: {resp.status_code}"
         return resp.json(), None
-        
+
 
 @tree.command(name="jira", description="Jira 정보를 조회합니다")
 @app_commands.describe(action="today: 오늘 활동 요약")
@@ -61,7 +68,6 @@ async def jira_command(interaction: discord.Interaction, action: str):
             await interaction.followup.send("오늘 업데이트된 이슈가 없어요.")
             return
 
-        # 상태별로 그룹핑
         groups = {}
         for issue in issues:
             f = issue.get("fields", {})
