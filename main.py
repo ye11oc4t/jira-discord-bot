@@ -1,10 +1,12 @@
 import os
 import hmac
 import hashlib
+import asyncio
 import httpx
 from fastapi import FastAPI, Request, HTTPException, Header
 from dotenv import load_dotenv
 from formatters import format_event
+from discord_bot import start_bot
 
 load_dotenv()
 
@@ -23,6 +25,10 @@ def verify_signature(payload: bytes, signature: str) -> bool:
         hashlib.sha256
     ).hexdigest()
     return hmac.compare_digest(expected, signature.removeprefix("sha256="))
+
+@app.on_event("startup")
+async def startup_event():
+    asyncio.create_task(start_bot())
 
 
 @app.get("/")
