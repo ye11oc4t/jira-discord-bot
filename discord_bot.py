@@ -93,6 +93,8 @@ async def do_transition(issue_key: str, status_name: str) -> bool:
     if not transitions:
         return False
 
+    print(f"Available transitions for {issue_key}: {[t['to']['name'] for t in transitions]}")
+
     target = None
     for t in transitions:
         if t["to"]["name"].lower() == status_name.lower():
