@@ -30,20 +30,20 @@ async def fetch_today_issues():
     jql = f'project = {JIRA_PROJECT_KEY} AND updated >= "{today}" ORDER BY updated DESC'
 
     async with httpx.AsyncClient() as http:
-        resp = await http.get(
-            f"{JIRA_BASE_URL}/rest/api/3/search",
+        resp = await http.post(
+            f"{JIRA_BASE_URL}/rest/api/3/issue/search",
             headers=get_jira_auth(),
-            params={
+            json={
                 "jql": jql,
                 "maxResults": 20,
-                "fields": "summary,status,assignee,priority,issuetype,updated"
+                "fields": ["summary", "status", "assignee", "priority", "issuetype", "updated"]
             },
             timeout=10,
         )
         if resp.status_code != 200:
             return None, f"Jira API 오류: {resp.status_code}"
         return resp.json(), None
-
+        
 
 @tree.command(name="jira", description="Jira 정보를 조회합니다")
 @app_commands.describe(action="today: 오늘 활동 요약")
