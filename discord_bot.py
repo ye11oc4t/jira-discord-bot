@@ -38,7 +38,7 @@ async def fetch_today_issues():
         resp = await http.get(
             url,
             headers=get_jira_auth(),
-            json={
+            params={
                 "jql": jql,
                 "maxResults": 20,
                 "fields": "summary,status,assignee,priority,issuetype,updated"
