@@ -380,13 +380,13 @@ def format_event(event_type: str, payload: dict):
 
     if event_type == "jira:issue_deleted":
         return fmt_issue_deleted(payload)
-
-    if event_type == "jira:issue_updated":
-        # changelog에 status 변경이 있으면 상태 변경 전용 포맷 사용
-        items = payload.get("changelog", {}).get("items", [])
-        if any(i.get("field") == "status" for i in items):
-            return fmt_issue_status_changed(payload)
-        return fmt_issue_updated(payload)
+        
+    #  if event_type == "jira:issue_updated":
+    # changelog에 status 변경이 있으면 상태 변경 전용 포맷 사용
+    #      items = payload.get("changelog", {}).get("items", [])
+    #      if any(i.get("field") == "status" for i in items):
+    #         return fmt_issue_status_changed(payload)
+    #         return fmt_issue_updated(payload)
 
     # 댓글
     if event_type in ("comment_created", "comment_updated", "comment_deleted"):
