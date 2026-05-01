@@ -35,13 +35,13 @@ async def fetch_today_issues():
     print(f"JQL: {jql}")
 
     async with httpx.AsyncClient() as http:
-        resp = await http.post(
+        resp = await http.get(
             url,
             headers=get_jira_auth(),
             json={
                 "jql": jql,
                 "maxResults": 20,
-                "fields": ["summary", "status", "assignee", "priority", "issuetype", "updated"]
+                "fields": "summary,status,assignee,priority,issuetype,updated"
             },
             timeout=10,
         )
