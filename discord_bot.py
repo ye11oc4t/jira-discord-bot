@@ -29,7 +29,7 @@ async def fetch_today_issues():
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     jql = f'project = {JIRA_PROJECT_KEY} AND updated >= "{today}" ORDER BY updated DESC'
 
-    url = f"{JIRA_BASE_URL}/rest/api/3/issue/search"
+    url = f"{JIRA_BASE_URL}/rest/api/3/search"
     print(f"Requesting: {url}")
     print(f"Auth email: {JIRA_EMAIL}")
     print(f"JQL: {jql}")
