@@ -152,7 +152,7 @@ async def task_start(interaction: discord.Interaction, issue_key: str, assignee:
     summary      = issue["fields"]["summary"]
     current_status = issue["fields"]["status"]["name"]
 
-    if current_status == "Done":
+    if current_status == "완료":
         # 완료된 작업 재시작 확인
         view = RestartConfirmView(issue_key, summary, assignee)
         await interaction.followup.send(
@@ -161,8 +161,8 @@ async def task_start(interaction: discord.Interaction, issue_key: str, assignee:
         )
         return
 
-    if current_status != "In Progress":
-        success = await do_transition(issue_key, "In Progress")
+    if current_status != "진행 중":
+        success = await do_transition(issue_key, "진행 중")
         if not success:
             await interaction.followup.send(f"❌ In Progress 전환 실패")
             return
@@ -307,7 +307,7 @@ async def _finish_task(interaction: discord.Interaction, issue_key: str, action:
         summary = issue["fields"]["summary"]
 
     if action == "done":
-        success = await do_transition(issue_key, "Done")
+        success = await do_transition(issue_key, "완료")
         if not success:
             await interaction.followup.send(f"❌ Done 전환 실패")
             return
@@ -353,7 +353,7 @@ class RestartConfirmView(discord.ui.View):
     @discord.ui.button(label="y", style=discord.ButtonStyle.success)
     async def confirm(self, interaction: discord.Interaction, button: discord.ui.Button):
         await interaction.response.defer()
-        success = await do_transition(self.issue_key, "In Progress")
+        success = await do_transition(self.issue_key, "진행 중")
         if not success:
             await interaction.followup.send(f"❌ In Progress 전환 실패")
             return
